@@ -57,6 +57,7 @@ liquibase {
 					url: 'jdbc:postgresql://localhost:5432/schmankerl',
 					username: dotenv.getProperty('DB_USERNAME'),
 					password: dotenv.getProperty('DB_PASSWORD'),
+					author: dotenv.getProperty('DB_CHANGES_AUTHOR'),
 					referenceUrl: 'hibernate:spring:de.samuelthomas.schmankerl.models?dialect=org.hibernate.dialect.PostgreSQLDialect'
 			]
 		}

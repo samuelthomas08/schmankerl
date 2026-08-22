@@ -25,6 +25,8 @@ public class User {
 
     private String email;
 
+    private String password;
+
     private Timestamp created_at;
 
     private Timestamp updated_at;
@@ -38,10 +40,11 @@ public class User {
     protected User() {
     }
 
-    public User(String firstname, String lastname, String email) {
+    public User(String firstname, String lastname, String email, String password) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
+        this.password = password;
     }
 
     public int getId() {
