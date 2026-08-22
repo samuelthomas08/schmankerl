@@ -30,8 +30,19 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
-    ports:
-      - "80:80"
+    networks:
+      - default
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.schmankerl.rule=Host(`schmankerl.samuel-thomas.de`)"
+      - "traefik.http.routers.schmankerl.entrypoints=websecure"
+      - "traefik.http.routers.schmankerl.tls.certresolver=letsencrypt"
+      - "traefik.http.services.schmankerl.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true
 
 volumes:
   postgres-data:
