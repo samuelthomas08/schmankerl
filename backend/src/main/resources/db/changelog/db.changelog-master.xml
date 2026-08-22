@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+    <changeSet author="thoma (generated)" id="1787400998366-1">
+        <createTable tableName="ingredients">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ingredientsPK"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-2">
+        <createTable tableName="recipe_ingredient_mapping">
+            <column name="amount" type="FLOAT(53)"/>
+            <column name="unit" type="VARCHAR(255)"/>
+            <column name="ingredients_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="recipe_ingredient_mappingPK"/>
+            </column>
+            <column name="recipe_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="recipe_ingredient_mappingPK"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-3">
+        <createTable tableName="recipe_steps">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="recipe_stepsPK"/>
+            </column>
+            <column name="duration_minutes" type="INTEGER"/>
+            <column name="instruction" type="VARCHAR(255)"/>
+            <column name="step_number" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recipe_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-4">
+        <createTable tableName="recipes">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="recipesPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="estimated_time" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_by" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-5">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="usersPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="firstname" type="VARCHAR(255)"/>
+            <column name="lastname" type="VARCHAR(255)"/>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-6">
+        <createTable tableName="workspace_recipe_mapping">
+            <column name="workspace_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recipe_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-7">
+        <createTable tableName="workspace_user_mapping">
+            <column name="workspace_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-8">
+        <createTable tableName="workspaces">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="workspacesPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-9">
+        <addUniqueConstraint columnNames="workspace_id, recipe_id" constraintName="UK5t3pyq7613vkgb777m27n9t6e" tableName="workspace_recipe_mapping"/>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-10">
+        <addUniqueConstraint columnNames="workspace_id, user_id" constraintName="UKf488flruecwijvw3qmf72npka" tableName="workspace_user_mapping"/>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-11">
+        <addForeignKeyConstraint baseColumnNames="recipe_id" baseTableName="workspace_recipe_mapping" constraintName="FK2s7tehg1avw1gv10j7pvayvg5" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="recipes" validate="true"/>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-12">
+        <addForeignKeyConstraint baseColumnNames="workspace_id" baseTableName="workspace_user_mapping" constraintName="FK40iylw6m6ppip5wmjdb44wxwk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="workspaces" validate="true"/>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-13">
+        <addForeignKeyConstraint baseColumnNames="ingredients_id" baseTableName="recipe_ingredient_mapping" constraintName="FK4jvxr8kkitpf5eucl5y087ocg" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="ingredients" validate="true"/>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-14">
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="recipes" constraintName="FK562qxrf6asv465kol8skqtgx8" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-15">
+        <addForeignKeyConstraint baseColumnNames="workspace_id" baseTableName="workspace_recipe_mapping" constraintName="FKbbwsy4nv4c47yesvua3iy92ta" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="workspaces" validate="true"/>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-16">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="workspace_user_mapping" constraintName="FKmylsxnw8hji9lena621q2ag58" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-17">
+        <addForeignKeyConstraint baseColumnNames="recipe_id" baseTableName="recipe_steps" constraintName="FKof4i3g3aiwgro5ykaf1j28iw1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="recipes" validate="true"/>
+    </changeSet>
+    <changeSet author="thoma (generated)" id="1787400998366-18">
+        <addForeignKeyConstraint baseColumnNames="recipe_id" baseTableName="recipe_ingredient_mapping" constraintName="FKpon3a3ciqwhhemqd6tui2mpt2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="recipes" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

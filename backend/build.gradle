@@ -1,7 +1,17 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.liquibase:liquibase-core:5.0.3'
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.1.1'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.liquibase.gradle' version '3.1.0'
 }
 
 group = 'de.samuelthomas'
@@ -22,6 +32,36 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'org.liquibase:liquibase-core'
+
+	liquibaseRuntime 'org.liquibase:liquibase-core'
+	liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate7:5.0.4'
+	liquibaseRuntime 'org.postgresql:postgresql'
+	liquibaseRuntime 'info.picocli:picocli:4.7.5'
+	liquibaseRuntime 'org.springframework.boot:spring-boot-starter-data-jpa'
+	liquibaseRuntime sourceSets.main.output
+	liquibaseRuntime sourceSets.main.runtimeClasspath
+}
+
+def dotenv = new Properties()
+file("${projectDir}/.env").withInputStream { dotenv.load(it) }
+
+liquibase {
+	activities {
+		main {
+			arguments = [
+					changelogFile: 'src/main/resources/db/changelog/db.changelog-master.xml',
+					url: 'jdbc:postgresql://localhost:5432/schmankerl',
+					username: dotenv.getProperty('DB_USERNAME'),
+					password: dotenv.getProperty('DB_PASSWORD'),
+					referenceUrl: 'hibernate:spring:de.samuelthomas.schmankerl.models?dialect=org.hibernate.dialect.PostgreSQLDialect'
+			]
+		}
+	}
+	runList = 'main'
 }
 
 tasks.named('test') {
