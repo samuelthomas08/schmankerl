@@ -1,7 +1,17 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.liquibase:liquibase-core:5.0.3'
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.1.1'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.liquibase.gradle' version '3.1.0'
 }
 
 group = 'de.samuelthomas'
@@ -19,9 +29,48 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-restclient'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.0'
+	implementation 'me.paulschwarz:springboot4-dotenv:5.1.0'
+	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'org.springframework.boot:spring-boot-starter-liquibase'
+	implementation 'org.liquibase:liquibase-core'
+
+	liquibaseRuntime 'org.liquibase:liquibase-core'
+	liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate7:5.0.4'
+	liquibaseRuntime 'org.postgresql:postgresql'
+	liquibaseRuntime 'info.picocli:picocli:4.7.5'
+	liquibaseRuntime 'org.springframework.boot:spring-boot-starter-data-jpa'
+	liquibaseRuntime sourceSets.main.output
+	liquibaseRuntime sourceSets.main.runtimeClasspath
+}
+
+def dotenv = new Properties()
+def dotenvFile = file("${projectDir}/.env")
+if (dotenvFile.exists()) {
+	dotenvFile.withInputStream { dotenv.load(it) }
+}
+
+liquibase {
+	activities {
+		main {
+			arguments = [
+					changelogFile: 'src/main/resources/db/changelog/db.changelog-master.xml',
+					url: 'jdbc:postgresql://localhost:5432/schmankerl',
+					username: dotenv.getProperty('DB_USERNAME'),
+					password: dotenv.getProperty('DB_PASSWORD'),
+					author: dotenv.getProperty('DB_CHANGES_AUTHOR'),
+					referenceUrl: 'hibernate:spring:de.samuelthomas.schmankerl.models?dialect=org.hibernate.dialect.PostgreSQLDialect'
+			]
+		}
+	}
+	runList = 'main'
 }
 
 tasks.named('test') {

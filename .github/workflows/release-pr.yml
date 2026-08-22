@@ -1,0 +1,43 @@
+name: Release PR
+
+on:
+  push:
+    branches: [development]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  release-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Open or update release PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch origin production development
+
+          COMMITS=$(git log origin/production..origin/development --pretty=format:'- %s (%h)')
+
+          if [ -z "$COMMITS" ]; then
+            echo "No new commits ahead of production, skipping."
+            exit 0
+          fi
+
+          BODY=$(printf '## Neue Commits seit dem letzten Deploy\n\n%s\n' "$COMMITS")
+
+          PR_NUMBER=$(gh pr list --base production --head development --state open --json number --jq '.[0].number')
+
+          if [ -n "$PR_NUMBER" ] && [ "$PR_NUMBER" != "null" ]; then
+            gh pr edit "$PR_NUMBER" --body "$BODY"
+            echo "Updated PR #$PR_NUMBER"
+          else
+            gh pr create --base production --head development \
+              --title "Deploy: $(date +%Y-%m-%d)" \
+              --body "$BODY"
+          fi
