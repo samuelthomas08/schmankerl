@@ -37,6 +37,6 @@ jobs:
             echo "Updated PR #$PR_NUMBER"
           else
             gh pr create --base production --head development \
-              --title "Deploy: $(date +%Y-%m-%d)" \
+              --title "Deploy: $(date -u +'%Y-%m-%d %H:%M:%S') UTC" \
               --body "$BODY"
           fi
