@@ -1,7 +1,8 @@
 name: Deploy
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [production]
 
 env:
   BACKEND_IMAGE: ghcr.io/${{ github.repository_owner }}/schmankerl-backend
