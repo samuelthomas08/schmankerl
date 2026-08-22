@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -10,6 +11,7 @@ import {
   Tabs,
   TextField,
 } from '@heroui/react';
+import { createUser } from '../client';
 
 const EMAIL_PATTERN = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
@@ -29,15 +31,36 @@ const validatePassword = (value: string) => {
 
 const AuthPage = () => {
   const navigate = useNavigate();
+  const [signupError, setSignupError] = useState<string | null>(null);
+  const [isSigningUp, setIsSigningUp] = useState(false);
 
   const handleLogin = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     navigate('/dashboard');
   };
 
-  const handleSignup = (event: FormEvent<HTMLFormElement>) => {
+  const handleSignup = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    navigate('/create-workspace');
+    setSignupError(null);
+
+    const formData = new FormData(event.currentTarget);
+    setIsSigningUp(true);
+    const { data: user, error } = await createUser({
+      body: {
+        firstname: formData.get('firstname') as string,
+        lastname: formData.get('lastname') as string,
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
+      },
+    });
+    setIsSigningUp(false);
+
+    if (error || !user) {
+      setSignupError('Registrierung fehlgeschlagen. Bitte versuch es erneut.');
+      return;
+    }
+
+    navigate('/create-workspace', { state: { user } });
   };
 
   return (
@@ -130,8 +153,16 @@ const AuthPage = () => {
                   <Input placeholder="••••••••" variant="secondary" />
                   <FieldError />
                 </TextField>
-                <Button fullWidth type="submit" variant="primary">
-                  Konto erstellen
+                {signupError ? (
+                  <p className="text-danger text-sm">{signupError}</p>
+                ) : null}
+                <Button
+                  fullWidth
+                  isDisabled={isSigningUp}
+                  type="submit"
+                  variant="primary"
+                >
+                  {isSigningUp ? 'Konto wird erstellt…' : 'Konto erstellen'}
                 </Button>
               </Form>
             </Tabs.Panel>

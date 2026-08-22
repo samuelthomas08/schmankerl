@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Button,
   Card,
@@ -9,15 +10,50 @@ import {
   Label,
   TextField,
 } from '@heroui/react';
+import { createWorkspace } from '../client';
+import type { User } from '../client';
 
 const CreateWorkspacePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const user = (location.state as { user?: User } | null)?.user;
+  const [error, setError] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    if (!user) {
+      navigate('/login', { replace: true });
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const workspaceName = new FormData(event.currentTarget).get('name');
-    navigate('/dashboard', { state: { workspaceName } });
+    if (!user) return;
+    setError(null);
+
+    const name = new FormData(event.currentTarget).get('name') as string;
+    setIsCreating(true);
+    const { data: workspace, error: apiError } = await createWorkspace({
+      body: {
+        name,
+        users: [{ id: user.id }],
+      },
+    });
+    setIsCreating(false);
+
+    if (apiError || !workspace) {
+      setError(
+        'Workspace konnte nicht erstellt werden. Bitte versuch es erneut.',
+      );
+      return;
+    }
+
+    navigate('/dashboard', { state: { workspaceName: workspace.name } });
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="flex min-h-svh items-center justify-center p-4">
@@ -38,8 +74,14 @@ const CreateWorkspacePage = () => {
               />
               <FieldError />
             </TextField>
-            <Button fullWidth type="submit" variant="primary">
-              Workspace erstellen
+            {error ? <p className="text-danger text-sm">{error}</p> : null}
+            <Button
+              fullWidth
+              isDisabled={isCreating}
+              type="submit"
+              variant="primary"
+            >
+              {isCreating ? 'Workspace wird erstellt…' : 'Workspace erstellen'}
             </Button>
           </Form>
         </Card.Content>

@@ -79,4 +79,8 @@ public class Workspace {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 }
