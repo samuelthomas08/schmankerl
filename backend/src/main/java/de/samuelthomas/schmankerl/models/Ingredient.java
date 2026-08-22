@@ -1,5 +1,6 @@
 package de.samuelthomas.schmankerl.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,6 +20,7 @@ public class Ingredient {
     protected Ingredient() {
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     public Ingredient(String name) {
         this.name = name;
     }
@@ -29,5 +31,13 @@ public class Ingredient {
 
     public String getName() {
         return name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

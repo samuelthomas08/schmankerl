@@ -1,5 +1,7 @@
 package de.samuelthomas.schmankerl.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -14,6 +16,7 @@ public class RecipeIngredientMapping {
     @EmbeddedId
     private RecipeIngredientMappingId id;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     @MapsId("recipe_id")
     @JoinColumn(name = "recipe_id")
@@ -31,6 +34,7 @@ public class RecipeIngredientMapping {
     protected RecipeIngredientMapping() {
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     public RecipeIngredientMapping(Recipe recipe, Ingredient ingredient, Double amount, String unit) {
         this.recipe = recipe;
         this.ingredient = ingredient;
@@ -57,5 +61,29 @@ public class RecipeIngredientMapping {
 
     public String getUnit() {
         return unit;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+        syncId();
+    }
+
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
+        syncId();
+    }
+
+    private void syncId() {
+        if (recipe != null && ingredient != null) {
+            this.id = new RecipeIngredientMappingId(recipe.getId(), ingredient.getId());
+        }
     }
 }

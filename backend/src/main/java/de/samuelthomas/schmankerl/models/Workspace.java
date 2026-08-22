@@ -1,5 +1,6 @@
 package de.samuelthomas.schmankerl.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -46,6 +47,7 @@ public class Workspace {
     protected Workspace() {
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     public Workspace(String name) {
         this.name = name;
     }
@@ -68,5 +70,13 @@ public class Workspace {
 
     public List<Recipe> getRecipes() {
         return recipes;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

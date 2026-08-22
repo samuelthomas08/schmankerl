@@ -1,5 +1,7 @@
 package de.samuelthomas.schmankerl.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,15 +33,18 @@ public class User {
 
     private Timestamp updated_at;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "users")
     private List<Workspace> workspaces;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "created_by")
     private List<Recipe> recipes;
 
     protected User() {
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     public User(String firstname, String lastname, String email, String password) {
         this.firstname = firstname;
         this.lastname = lastname;
@@ -77,5 +82,25 @@ public class User {
 
     public List<Recipe> getRecipes() {
         return recipes;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

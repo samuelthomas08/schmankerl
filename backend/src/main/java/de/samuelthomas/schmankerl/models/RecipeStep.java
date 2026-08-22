@@ -1,5 +1,7 @@
 package de.samuelthomas.schmankerl.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +18,7 @@ public class RecipeStep {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
@@ -29,11 +32,12 @@ public class RecipeStep {
     protected RecipeStep() {
     }
 
-    public RecipeStep(Recipe recipe, int step_number, String instruction, Integer duration_minutes) {
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    public RecipeStep(Recipe recipe, int stepNumber, String instruction, Integer durationMinutes) {
         this.recipe = recipe;
-        this.step_number = step_number;
+        this.step_number = stepNumber;
         this.instruction = instruction;
-        this.duration_minutes = duration_minutes;
+        this.duration_minutes = durationMinutes;
     }
 
     public int getId() {
@@ -54,5 +58,25 @@ public class RecipeStep {
 
     public Integer getDurationMinutes() {
         return duration_minutes;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
+    public void setStepNumber(int step_number) {
+        this.step_number = step_number;
+    }
+
+    public void setInstruction(String instruction) {
+        this.instruction = instruction;
+    }
+
+    public void setDurationMinutes(Integer duration_minutes) {
+        this.duration_minutes = duration_minutes;
     }
 }

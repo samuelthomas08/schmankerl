@@ -1,5 +1,7 @@
 package de.samuelthomas.schmankerl.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,6 +37,7 @@ public class Recipe {
 
     private Timestamp updated_at;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "recipes")
     private List<Workspace> workspaces;
 
@@ -47,11 +50,12 @@ public class Recipe {
     protected Recipe() {
     }
 
-    public Recipe(String name, int estimated_time, String description, User created_by) {
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    public Recipe(String name, int estimatedTime, String description, User createdBy) {
         this.name = name;
-        this.estimated_time = estimated_time;
+        this.estimated_time = estimatedTime;
         this.description = description;
-        this.created_by = created_by;
+        this.created_by = createdBy;
     }
 
     public int getId() {
@@ -92,5 +96,25 @@ public class Recipe {
 
     public List<RecipeStep> getSteps() {
         return steps;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEstimatedTime(int estimated_time) {
+        this.estimated_time = estimated_time;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCreatedBy(User created_by) {
+        this.created_by = created_by;
     }
 }
