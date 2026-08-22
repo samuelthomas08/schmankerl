@@ -19,25 +19,25 @@ public class RecipeController {
     }
 
     @GetMapping
-    public List<Recipe> getAll() {
+    public List<Recipe> getAllRecipes() {
         return recipeRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Recipe getById(@PathVariable int id) {
+    public Recipe getRecipeById(@PathVariable int id) {
         return recipeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Recipe create(@RequestBody Recipe recipe) {
+    public Recipe createRecipe(@RequestBody Recipe recipe) {
         recipe.setId(0);
         return recipeRepository.save(recipe);
     }
 
     @PutMapping("/{id}")
-    public Recipe update(@PathVariable int id, @RequestBody Recipe updatedRecipe) {
+    public Recipe updateRecipe(@PathVariable int id, @RequestBody Recipe updatedRecipe) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         recipe.setName(updatedRecipe.getName());
@@ -49,7 +49,7 @@ public class RecipeController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int id) {
+    public void deleteRecipe(@PathVariable int id) {
         if (!recipeRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

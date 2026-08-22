@@ -19,25 +19,25 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAll() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable int id) {
+    public User getUserById(@PathVariable int id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@RequestBody User user) {
+    public User createUser(@RequestBody User user) {
         user.setId(0);
         return userRepository.save(user);
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable int id, @RequestBody User updatedUser) {
+    public User updateUser(@PathVariable int id, @RequestBody User updatedUser) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         user.setFirstname(updatedUser.getFirstname());
@@ -48,7 +48,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int id) {
+    public void deleteUser(@PathVariable int id) {
         if (!userRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

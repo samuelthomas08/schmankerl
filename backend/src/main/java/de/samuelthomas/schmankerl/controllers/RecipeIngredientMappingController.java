@@ -20,12 +20,12 @@ public class RecipeIngredientMappingController {
     }
 
     @GetMapping
-    public List<RecipeIngredientMapping> getAll() {
+    public List<RecipeIngredientMapping> getAllRecipeIngredients() {
         return recipeIngredientMappingRepository.findAll();
     }
 
     @GetMapping("/{recipeId}/{ingredientsId}")
-    public RecipeIngredientMapping getById(@PathVariable int recipeId, @PathVariable int ingredientsId) {
+    public RecipeIngredientMapping getRecipeIngredientById(@PathVariable int recipeId, @PathVariable int ingredientsId) {
         return recipeIngredientMappingRepository
                 .findById(new RecipeIngredientMappingId(recipeId, ingredientsId))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -33,12 +33,12 @@ public class RecipeIngredientMappingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RecipeIngredientMapping create(@RequestBody RecipeIngredientMapping recipeIngredientMapping) {
+    public RecipeIngredientMapping createRecipeIngredient(@RequestBody RecipeIngredientMapping recipeIngredientMapping) {
         return recipeIngredientMappingRepository.save(recipeIngredientMapping);
     }
 
     @PutMapping("/{recipeId}/{ingredientsId}")
-    public RecipeIngredientMapping update(
+    public RecipeIngredientMapping updateRecipeIngredient(
             @PathVariable int recipeId,
             @PathVariable int ingredientsId,
             @RequestBody RecipeIngredientMapping updatedMapping
@@ -53,7 +53,7 @@ public class RecipeIngredientMappingController {
 
     @DeleteMapping("/{recipeId}/{ingredientsId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int recipeId, @PathVariable int ingredientsId) {
+    public void deleteRecipeIngredient(@PathVariable int recipeId, @PathVariable int ingredientsId) {
         RecipeIngredientMappingId id = new RecipeIngredientMappingId(recipeId, ingredientsId);
         if (!recipeIngredientMappingRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

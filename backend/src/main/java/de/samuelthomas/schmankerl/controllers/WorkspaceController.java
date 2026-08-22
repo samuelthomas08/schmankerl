@@ -19,25 +19,25 @@ public class WorkspaceController {
     }
 
     @GetMapping
-    public List<Workspace> getAll() {
+    public List<Workspace> getAllWorkspaces() {
         return workspaceRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Workspace getById(@PathVariable int id) {
+    public Workspace getWorkspaceById(@PathVariable int id) {
         return workspaceRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Workspace create(@RequestBody Workspace workspace) {
+    public Workspace createWorkspace(@RequestBody Workspace workspace) {
         workspace.setId(0);
         return workspaceRepository.save(workspace);
     }
 
     @PutMapping("/{id}")
-    public Workspace update(@PathVariable int id, @RequestBody Workspace updatedWorkspace) {
+    public Workspace updateWorkspace(@PathVariable int id, @RequestBody Workspace updatedWorkspace) {
         Workspace workspace = workspaceRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         workspace.setName(updatedWorkspace.getName());
@@ -46,7 +46,7 @@ public class WorkspaceController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int id) {
+    public void deleteWorkspace(@PathVariable int id) {
         if (!workspaceRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

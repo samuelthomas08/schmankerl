@@ -19,25 +19,25 @@ public class IngredientController {
     }
 
     @GetMapping
-    public List<Ingredient> getAll() {
+    public List<Ingredient> getAllIngredients() {
         return ingredientRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Ingredient getById(@PathVariable int id) {
+    public Ingredient getIngredientById(@PathVariable int id) {
         return ingredientRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Ingredient create(@RequestBody Ingredient ingredient) {
+    public Ingredient createIngredient(@RequestBody Ingredient ingredient) {
         ingredient.setId(0);
         return ingredientRepository.save(ingredient);
     }
 
     @PutMapping("/{id}")
-    public Ingredient update(@PathVariable int id, @RequestBody Ingredient updatedIngredient) {
+    public Ingredient updateIngredient(@PathVariable int id, @RequestBody Ingredient updatedIngredient) {
         Ingredient ingredient = ingredientRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         ingredient.setName(updatedIngredient.getName());
@@ -46,7 +46,7 @@ public class IngredientController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int id) {
+    public void deleteIngredient(@PathVariable int id) {
         if (!ingredientRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

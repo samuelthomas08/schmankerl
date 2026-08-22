@@ -19,25 +19,25 @@ public class RecipeStepController {
     }
 
     @GetMapping
-    public List<RecipeStep> getAll() {
+    public List<RecipeStep> getAllRecipeSteps() {
         return recipeStepRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public RecipeStep getById(@PathVariable int id) {
+    public RecipeStep getRecipeStepById(@PathVariable int id) {
         return recipeStepRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RecipeStep create(@RequestBody RecipeStep recipeStep) {
+    public RecipeStep createRecipeStep(@RequestBody RecipeStep recipeStep) {
         recipeStep.setId(0);
         return recipeStepRepository.save(recipeStep);
     }
 
     @PutMapping("/{id}")
-    public RecipeStep update(@PathVariable int id, @RequestBody RecipeStep updatedRecipeStep) {
+    public RecipeStep updateRecipeStep(@PathVariable int id, @RequestBody RecipeStep updatedRecipeStep) {
         RecipeStep recipeStep = recipeStepRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         recipeStep.setRecipe(updatedRecipeStep.getRecipe());
@@ -49,7 +49,7 @@ public class RecipeStepController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int id) {
+    public void deleteRecipeStep(@PathVariable int id) {
         if (!recipeStepRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
