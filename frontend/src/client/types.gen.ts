@@ -25,7 +25,7 @@ export type RecipeIngredientMapping = {
     id?: RecipeIngredientMappingId;
     ingredient?: Ingredient;
     amount?: number;
-    unit?: string;
+    unit?: 'GRAM' | 'KILOGRAM' | 'MILLILITER' | 'LITER' | 'PIECE' | 'TABLESPOON' | 'TEASPOON' | 'PINCH' | 'CUP' | 'CLOVE' | 'PACKAGE';
 };
 
 export type RecipeIngredientMappingId = {
@@ -36,8 +36,8 @@ export type RecipeIngredientMappingId = {
 export type RecipeStep = {
     id?: number;
     instruction?: string;
-    stepNumber?: number;
     durationMinutes?: number;
+    stepNumber?: number;
 };
 
 export type User = {
@@ -57,6 +57,23 @@ export type Workspace = {
     createdAt?: string;
 };
 
+export type WorkspaceInvite = {
+    id?: number;
+    token?: string;
+    workspace?: Workspace;
+    createdAt?: string;
+};
+
+export type AcceptInviteRequest = {
+    userId?: number;
+};
+
+export type UnitOption = {
+    name?: string;
+    fullName?: string;
+    abbreviation?: string;
+};
+
 export type RecipeWritable = {
     id?: number;
     name?: string;
@@ -74,15 +91,15 @@ export type RecipeIngredientMappingWritable = {
     recipe?: RecipeWritable;
     ingredient?: Ingredient;
     amount?: number;
-    unit?: string;
+    unit?: 'GRAM' | 'KILOGRAM' | 'MILLILITER' | 'LITER' | 'PIECE' | 'TABLESPOON' | 'TEASPOON' | 'PINCH' | 'CUP' | 'CLOVE' | 'PACKAGE';
 };
 
 export type RecipeStepWritable = {
     id?: number;
     recipe?: RecipeWritable;
     instruction?: string;
-    stepNumber?: number;
     durationMinutes?: number;
+    stepNumber?: number;
 };
 
 export type UserWritable = {
@@ -100,6 +117,13 @@ export type WorkspaceWritable = {
     name?: string;
     users?: Array<UserWritable>;
     recipes?: Array<RecipeWritable>;
+    createdAt?: string;
+};
+
+export type WorkspaceInviteWritable = {
+    id?: number;
+    token?: string;
+    workspace?: WorkspaceWritable;
     createdAt?: string;
 };
 
@@ -462,6 +486,42 @@ export type CreateWorkspaceResponses = {
 
 export type CreateWorkspaceResponse = CreateWorkspaceResponses[keyof CreateWorkspaceResponses];
 
+export type CreateWorkspaceRecipeData = {
+    body: RecipeWritable;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/workspaces/{id}/recipes';
+};
+
+export type CreateWorkspaceRecipeResponses = {
+    /**
+     * Created
+     */
+    201: Recipe;
+};
+
+export type CreateWorkspaceRecipeResponse = CreateWorkspaceRecipeResponses[keyof CreateWorkspaceRecipeResponses];
+
+export type CreateWorkspaceInviteData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/workspaces/{id}/invites';
+};
+
+export type CreateWorkspaceInviteResponses = {
+    /**
+     * Created
+     */
+    201: WorkspaceInvite;
+};
+
+export type CreateWorkspaceInviteResponse = CreateWorkspaceInviteResponses[keyof CreateWorkspaceInviteResponses];
+
 export type GetAllUsersData = {
     body?: never;
     path?: never;
@@ -590,6 +650,24 @@ export type CreateRecipeIngredientResponses = {
 
 export type CreateRecipeIngredientResponse = CreateRecipeIngredientResponses[keyof CreateRecipeIngredientResponses];
 
+export type AcceptInviteData = {
+    body: AcceptInviteRequest;
+    path: {
+        token: string;
+    };
+    query?: never;
+    url: '/api/invites/{token}/accept';
+};
+
+export type AcceptInviteResponses = {
+    /**
+     * OK
+     */
+    200: Workspace;
+};
+
+export type AcceptInviteResponse = AcceptInviteResponses[keyof AcceptInviteResponses];
+
 export type GetAllIngredientsData = {
     body?: never;
     path?: never;
@@ -621,3 +699,37 @@ export type CreateIngredientResponses = {
 };
 
 export type CreateIngredientResponse = CreateIngredientResponses[keyof CreateIngredientResponses];
+
+export type GetAllUnitsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/units';
+};
+
+export type GetAllUnitsResponses = {
+    /**
+     * OK
+     */
+    200: Array<UnitOption>;
+};
+
+export type GetAllUnitsResponse = GetAllUnitsResponses[keyof GetAllUnitsResponses];
+
+export type GetInviteByTokenData = {
+    body?: never;
+    path: {
+        token: string;
+    };
+    query?: never;
+    url: '/api/invites/{token}';
+};
+
+export type GetInviteByTokenResponses = {
+    /**
+     * OK
+     */
+    200: WorkspaceInvite;
+};
+
+export type GetInviteByTokenResponse = GetInviteByTokenResponses[keyof GetInviteByTokenResponses];

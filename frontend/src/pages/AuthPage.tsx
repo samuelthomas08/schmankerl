@@ -11,7 +11,14 @@ import {
   Tabs,
   TextField,
 } from '@heroui/react';
-import { createUser } from '../client';
+import { ChefHat, LogIn, UserPlus } from 'lucide-react';
+import { acceptInvite, createUser } from '../client';
+import {
+  clearPendingInviteToken,
+  getPendingInviteToken,
+  setStoredUser,
+  setStoredWorkspace,
+} from '../lib/session';
 
 const EMAIL_PATTERN = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
@@ -60,6 +67,28 @@ const AuthPage = () => {
       return;
     }
 
+    setStoredUser({
+      id: user.id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+    });
+
+    const pendingInviteToken = getPendingInviteToken();
+    if (pendingInviteToken) {
+      const { data: workspace, error: acceptError } = await acceptInvite({
+        path: { token: pendingInviteToken },
+        body: { userId: user.id },
+      });
+      clearPendingInviteToken();
+
+      if (!acceptError && workspace) {
+        setStoredWorkspace({ id: workspace.id, name: workspace.name });
+        navigate('/dashboard');
+        return;
+      }
+    }
+
     navigate('/create-workspace', { state: { user } });
   };
 
@@ -67,7 +96,10 @@ const AuthPage = () => {
     <div className="flex min-h-svh items-center justify-center p-4">
       <Card className="w-full max-w-sm">
         <Card.Header>
-          <Card.Title>Willkommen bei Schmankerl</Card.Title>
+          <Card.Title className="flex items-center gap-2">
+            <ChefHat className="size-5" />
+            Willkommen bei Schmankerl
+          </Card.Title>
           <Card.Description>
             Melde dich an oder erstelle ein neues Konto
           </Card.Description>
@@ -105,6 +137,7 @@ const AuthPage = () => {
                   <FieldError />
                 </TextField>
                 <Button fullWidth type="submit" variant="primary">
+                  <LogIn className="size-4" />
                   Anmelden
                 </Button>
               </Form>
@@ -162,6 +195,7 @@ const AuthPage = () => {
                   type="submit"
                   variant="primary"
                 >
+                  <UserPlus className="size-4" />
                   {isSigningUp ? 'Konto wird erstellt…' : 'Konto erstellen'}
                 </Button>
               </Form>

@@ -129,4 +129,17 @@
             <column name="password" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="samuelthomas08" id="1787479774994-1">
+        <createTable tableName="workspace_invites">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="workspace_invitesPK"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="token" type="VARCHAR(255)"/>
+            <column name="workspace_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="samuelthomas08" id="1787479774994-2">
+        <addForeignKeyConstraint baseColumnNames="workspace_id" baseTableName="workspace_invites" constraintName="FKjgai7acsn6tey02gqqcfl2m6a" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="workspaces" validate="true"/>
+    </changeSet>
 </databaseChangeLog>

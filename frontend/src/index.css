@@ -3,6 +3,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
 body {
   @apply bg-background text-foreground;
 }
