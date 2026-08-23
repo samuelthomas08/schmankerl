@@ -1,14 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, Input } from '@heroui/react';
+import {
+  ArrowLeft,
+  Check,
+  Copy,
+  Link as LinkIcon,
+  User,
+  UserPlus,
+  Users,
+  X,
+} from 'lucide-react';
 import { createWorkspaceInvite, getWorkspaceById } from '../client';
-import type { User } from '../client';
+import type { User as UserType } from '../client';
 import { getStoredUser, getStoredWorkspace } from '../lib/session';
 
 const WorkspaceSettingsPage = () => {
   const navigate = useNavigate();
   const workspace = getStoredWorkspace();
-  const [members, setMembers] = useState<User[]>([]);
+  const [members, setMembers] = useState<UserType[]>([]);
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [inviteLink, setInviteLink] = useState<string | null>(null);
   const [isCreatingInvite, setIsCreatingInvite] = useState(false);
@@ -68,27 +78,35 @@ const WorkspaceSettingsPage = () => {
 
   return (
     <div className="flex min-h-svh flex-col">
-      <header className="border-border flex items-center justify-between border-b px-6 py-4">
-        <div>
-          <p className="text-sm font-medium">Workspace-Einstellungen</p>
-          <p className="text-muted text-xs">
-            {workspace?.name || 'Dein Workspace'}
-          </p>
-        </div>
+      <header className="border-border flex items-center justify-between gap-2 border-b px-4 py-3 sm:px-6 sm:py-4">
         <Button
+          aria-label="Zurück"
+          isIconOnly
           size="sm"
           variant="outline"
           onPress={() => navigate('/dashboard')}
         >
-          Zurück
+          <ArrowLeft className="size-4" />
         </Button>
+        <div className="min-w-0 flex-1 text-right">
+          <p className="truncate text-sm font-medium">
+            Workspace-Einstellungen
+          </p>
+          <p className="text-muted truncate text-xs">
+            {workspace?.name || 'Dein Workspace'}
+          </p>
+        </div>
       </header>
 
-      <main className="flex flex-col gap-4 p-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium">Mitglieder</h2>
+      <main className="flex flex-col gap-4 p-4 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="flex items-center gap-2 text-sm font-medium">
+            <Users className="size-4" />
+            Mitglieder
+          </h2>
           <Button size="sm" variant="outline" onPress={openInviteDialog}>
-            Mitglied einladen
+            <UserPlus className="size-4" />
+            Einladen
           </Button>
         </div>
 
@@ -96,12 +114,17 @@ const WorkspaceSettingsPage = () => {
           {members.map((member) => (
             <li
               key={member.id}
-              className="border-border flex flex-col rounded-md border px-3 py-2"
+              className="border-border flex items-center gap-3 rounded-md border px-3 py-2"
             >
-              <span className="text-sm font-medium">
-                {member.firstname} {member.lastname}
-              </span>
-              <span className="text-muted text-xs">{member.email}</span>
+              <div className="bg-muted/20 flex size-8 shrink-0 items-center justify-center rounded-full">
+                <User className="text-muted size-4" />
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">
+                  {member.firstname} {member.lastname}
+                </p>
+                <p className="text-muted truncate text-xs">{member.email}</p>
+              </div>
             </li>
           ))}
         </ul>
@@ -117,7 +140,10 @@ const WorkspaceSettingsPage = () => {
             onClick={(event) => event.stopPropagation()}
           >
             <Card.Header>
-              <Card.Title>Mitglied einladen</Card.Title>
+              <Card.Title className="flex items-center gap-2">
+                <LinkIcon className="size-4" />
+                Mitglied einladen
+              </Card.Title>
             </Card.Header>
             <Card.Content className="flex flex-col gap-3">
               <p className="text-muted text-sm">
@@ -132,6 +158,11 @@ const WorkspaceSettingsPage = () => {
                 <div className="flex items-end gap-2">
                   <Input readOnly className="flex-1" value={inviteLink} />
                   <Button size="sm" variant="outline" onPress={handleCopy}>
+                    {copied ? (
+                      <Check className="size-4" />
+                    ) : (
+                      <Copy className="size-4" />
+                    )}
                     {copied ? 'Kopiert!' : 'Kopieren'}
                   </Button>
                 </div>
@@ -141,11 +172,13 @@ const WorkspaceSettingsPage = () => {
                   variant="primary"
                   onPress={handleInvite}
                 >
+                  <LinkIcon className="size-4" />
                   {isCreatingInvite ? 'Erstelle Link…' : 'Link generieren'}
                 </Button>
               )}
 
               <Button variant="outline" onPress={() => setIsInviteOpen(false)}>
+                <X className="size-4" />
                 Schließen
               </Button>
             </Card.Content>

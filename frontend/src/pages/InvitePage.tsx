@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card } from '@heroui/react';
+import { LogIn, Mail, UserPlus } from 'lucide-react';
 import { acceptInvite, getInviteByToken } from '../client';
 import type { WorkspaceInvite } from '../client';
 import {
@@ -61,7 +62,10 @@ const InvitePage = () => {
     <div className="flex min-h-svh items-center justify-center p-4">
       <Card className="w-full max-w-sm">
         <Card.Header>
-          <Card.Title>Einladung</Card.Title>
+          <Card.Title className="flex items-center gap-2">
+            <Mail className="size-5" />
+            Einladung
+          </Card.Title>
         </Card.Header>
         <Card.Content>
           {status === 'loading' ? (
@@ -85,6 +89,7 @@ const InvitePage = () => {
                   variant="primary"
                   onPress={handleJoin}
                 >
+                  <LogIn className="size-4" />
                   {isJoining ? 'Trete bei…' : `Als ${user.firstname} beitreten`}
                 </Button>
               ) : (
@@ -97,6 +102,7 @@ const InvitePage = () => {
                     variant="primary"
                     onPress={handleSignupFirst}
                   >
+                    <UserPlus className="size-4" />
                     Konto erstellen
                   </Button>
                 </div>

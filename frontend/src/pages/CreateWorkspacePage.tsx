@@ -10,6 +10,7 @@ import {
   Label,
   TextField,
 } from '@heroui/react';
+import { Plus } from 'lucide-react';
 import { createWorkspace } from '../client';
 import type { User } from '../client';
 import { setStoredWorkspace } from '../lib/session';
@@ -83,6 +84,7 @@ const CreateWorkspacePage = () => {
               type="submit"
               variant="primary"
             >
+              <Plus className="size-4" />
               {isCreating ? 'Workspace wird erstellt…' : 'Workspace erstellen'}
             </Button>
           </Form>
