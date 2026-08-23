@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AcceptInviteData, AcceptInviteResponses, CreateIngredientData, CreateIngredientResponses, CreateRecipeData, CreateRecipeIngredientData, CreateRecipeIngredientResponses, CreateRecipeResponses, CreateRecipeStepData, CreateRecipeStepResponses, CreateUserData, CreateUserResponses, CreateWorkspaceData, CreateWorkspaceInviteData, CreateWorkspaceInviteResponses, CreateWorkspaceResponses, DeleteIngredientData, DeleteIngredientResponses, DeleteRecipeData, DeleteRecipeIngredientData, DeleteRecipeIngredientResponses, DeleteRecipeResponses, DeleteRecipeStepData, DeleteRecipeStepResponses, DeleteUserData, DeleteUserResponses, DeleteWorkspaceData, DeleteWorkspaceResponses, GetAllIngredientsData, GetAllIngredientsResponses, GetAllRecipeIngredientsData, GetAllRecipeIngredientsResponses, GetAllRecipesData, GetAllRecipesResponses, GetAllRecipeStepsData, GetAllRecipeStepsResponses, GetAllUsersData, GetAllUsersResponses, GetAllWorkspacesData, GetAllWorkspacesResponses, GetIngredientByIdData, GetIngredientByIdResponses, GetInviteByTokenData, GetInviteByTokenResponses, GetRecipeByIdData, GetRecipeByIdResponses, GetRecipeIngredientByIdData, GetRecipeIngredientByIdResponses, GetRecipeStepByIdData, GetRecipeStepByIdResponses, GetUserByIdData, GetUserByIdResponses, GetWorkspaceByIdData, GetWorkspaceByIdResponses, UpdateIngredientData, UpdateIngredientResponses, UpdateRecipeData, UpdateRecipeIngredientData, UpdateRecipeIngredientResponses, UpdateRecipeResponses, UpdateRecipeStepData, UpdateRecipeStepResponses, UpdateUserData, UpdateUserResponses, UpdateWorkspaceData, UpdateWorkspaceResponses } from './types.gen';
+import type { AcceptInviteData, AcceptInviteResponses, CreateIngredientData, CreateIngredientResponses, CreateRecipeData, CreateRecipeIngredientData, CreateRecipeIngredientResponses, CreateRecipeResponses, CreateRecipeStepData, CreateRecipeStepResponses, CreateUserData, CreateUserResponses, CreateWorkspaceData, CreateWorkspaceInviteData, CreateWorkspaceInviteResponses, CreateWorkspaceRecipeData, CreateWorkspaceRecipeResponses, CreateWorkspaceResponses, DeleteIngredientData, DeleteIngredientResponses, DeleteRecipeData, DeleteRecipeIngredientData, DeleteRecipeIngredientResponses, DeleteRecipeResponses, DeleteRecipeStepData, DeleteRecipeStepResponses, DeleteUserData, DeleteUserResponses, DeleteWorkspaceData, DeleteWorkspaceResponses, GetAllIngredientsData, GetAllIngredientsResponses, GetAllRecipeIngredientsData, GetAllRecipeIngredientsResponses, GetAllRecipesData, GetAllRecipesResponses, GetAllRecipeStepsData, GetAllRecipeStepsResponses, GetAllUnitsData, GetAllUnitsResponses, GetAllUsersData, GetAllUsersResponses, GetAllWorkspacesData, GetAllWorkspacesResponses, GetIngredientByIdData, GetIngredientByIdResponses, GetInviteByTokenData, GetInviteByTokenResponses, GetRecipeByIdData, GetRecipeByIdResponses, GetRecipeIngredientByIdData, GetRecipeIngredientByIdResponses, GetRecipeStepByIdData, GetRecipeStepByIdResponses, GetUserByIdData, GetUserByIdResponses, GetWorkspaceByIdData, GetWorkspaceByIdResponses, UpdateIngredientData, UpdateIngredientResponses, UpdateRecipeData, UpdateRecipeIngredientData, UpdateRecipeIngredientResponses, UpdateRecipeResponses, UpdateRecipeStepData, UpdateRecipeStepResponses, UpdateUserData, UpdateUserResponses, UpdateWorkspaceData, UpdateWorkspaceResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -107,6 +107,15 @@ export const createWorkspace = <ThrowOnError extends boolean = false>(options: O
     }
 });
 
+export const createWorkspaceRecipe = <ThrowOnError extends boolean = false>(options: Options<CreateWorkspaceRecipeData, ThrowOnError>): RequestResult<CreateWorkspaceRecipeResponses, unknown, ThrowOnError> => (options.client ?? client).post<CreateWorkspaceRecipeResponses, unknown, ThrowOnError>({
+    url: '/api/workspaces/{id}/recipes',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
 export const createWorkspaceInvite = <ThrowOnError extends boolean = false>(options: Options<CreateWorkspaceInviteData, ThrowOnError>): RequestResult<CreateWorkspaceInviteResponses, unknown, ThrowOnError> => (options.client ?? client).post<CreateWorkspaceInviteResponses, unknown, ThrowOnError>({ url: '/api/workspaces/{id}/invites', ...options });
 
 export const getAllUsers = <ThrowOnError extends boolean = false>(options?: Options<GetAllUsersData, ThrowOnError>): RequestResult<GetAllUsersResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetAllUsersResponses, unknown, ThrowOnError>({ url: '/api/users', ...options });
@@ -172,5 +181,7 @@ export const createIngredient = <ThrowOnError extends boolean = false>(options: 
         ...options.headers
     }
 });
+
+export const getAllUnits = <ThrowOnError extends boolean = false>(options?: Options<GetAllUnitsData, ThrowOnError>): RequestResult<GetAllUnitsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetAllUnitsResponses, unknown, ThrowOnError>({ url: '/api/units', ...options });
 
 export const getInviteByToken = <ThrowOnError extends boolean = false>(options: Options<GetInviteByTokenData, ThrowOnError>): RequestResult<GetInviteByTokenResponses, unknown, ThrowOnError> => (options.client ?? client).get<GetInviteByTokenResponses, unknown, ThrowOnError>({ url: '/api/invites/{token}', ...options });

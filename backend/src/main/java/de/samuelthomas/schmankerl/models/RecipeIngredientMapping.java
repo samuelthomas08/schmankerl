@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -29,13 +31,14 @@ public class RecipeIngredientMapping {
 
     private Double amount;
 
-    private String unit;
+    @Enumerated(EnumType.STRING)
+    private Unit unit;
 
     protected RecipeIngredientMapping() {
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    public RecipeIngredientMapping(Recipe recipe, Ingredient ingredient, Double amount, String unit) {
+    public RecipeIngredientMapping(Recipe recipe, Ingredient ingredient, Double amount, Unit unit) {
         this.recipe = recipe;
         this.ingredient = ingredient;
         this.amount = amount;
@@ -59,7 +62,7 @@ public class RecipeIngredientMapping {
         return amount;
     }
 
-    public String getUnit() {
+    public Unit getUnit() {
         return unit;
     }
 
@@ -67,7 +70,7 @@ public class RecipeIngredientMapping {
         this.amount = amount;
     }
 
-    public void setUnit(String unit) {
+    public void setUnit(Unit unit) {
         this.unit = unit;
     }
 
