@@ -1,21 +1,26 @@
 package de.samuelthomas.schmankerl.controllers;
 
 import de.samuelthomas.schmankerl.models.Workspace;
+import de.samuelthomas.schmankerl.models.WorkspaceInvite;
+import de.samuelthomas.schmankerl.repositories.WorkspaceInviteRepository;
 import de.samuelthomas.schmankerl.repositories.WorkspaceRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/workspaces")
 public class WorkspaceController {
 
     private final WorkspaceRepository workspaceRepository;
+    private final WorkspaceInviteRepository workspaceInviteRepository;
 
-    public WorkspaceController(WorkspaceRepository workspaceRepository) {
+    public WorkspaceController(WorkspaceRepository workspaceRepository, WorkspaceInviteRepository workspaceInviteRepository) {
         this.workspaceRepository = workspaceRepository;
+        this.workspaceInviteRepository = workspaceInviteRepository;
     }
 
     @GetMapping
@@ -51,5 +56,14 @@ public class WorkspaceController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         workspaceRepository.deleteById(id);
+    }
+
+    @PostMapping("/{id}/invites")
+    @ResponseStatus(HttpStatus.CREATED)
+    public WorkspaceInvite createWorkspaceInvite(@PathVariable int id) {
+        Workspace workspace = workspaceRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        WorkspaceInvite invite = new WorkspaceInvite(UUID.randomUUID().toString(), workspace);
+        return workspaceInviteRepository.save(invite);
     }
 }

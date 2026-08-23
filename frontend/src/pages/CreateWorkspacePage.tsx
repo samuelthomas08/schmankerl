@@ -12,6 +12,7 @@ import {
 } from '@heroui/react';
 import { createWorkspace } from '../client';
 import type { User } from '../client';
+import { setStoredWorkspace } from '../lib/session';
 
 const CreateWorkspacePage = () => {
   const navigate = useNavigate();
@@ -48,7 +49,8 @@ const CreateWorkspacePage = () => {
       return;
     }
 
-    navigate('/dashboard', { state: { workspaceName: workspace.name } });
+    setStoredWorkspace({ id: workspace.id, name: workspace.name });
+    navigate('/dashboard');
   };
 
   if (!user) {

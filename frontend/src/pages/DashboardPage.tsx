@@ -1,22 +1,39 @@
-import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, EmptyState } from '@heroui/react';
+import { getStoredUser, getStoredWorkspace } from '../lib/session';
 
 const DashboardPage = () => {
-  const location = useLocation();
-  const workspaceName =
-    (location.state as { workspaceName?: string } | null)?.workspaceName ||
-    'Dein Workspace';
+  const navigate = useNavigate();
+  const workspace = getStoredWorkspace();
+
+  useEffect(() => {
+    if (!getStoredUser() || !workspace?.id) {
+      navigate('/login', { replace: true });
+    }
+  }, [navigate, workspace?.id]);
 
   return (
     <div className="flex min-h-svh flex-col">
       <header className="border-border flex items-center justify-between border-b px-6 py-4">
         <div>
           <p className="text-sm font-medium">Schmankerl</p>
-          <p className="text-muted text-xs">{workspaceName}</p>
+          <p className="text-muted text-xs">
+            {workspace?.name || 'Dein Workspace'}
+          </p>
         </div>
-        <Button size="sm" variant="outline">
-          Abmelden
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onPress={() => navigate('/workspace-settings')}
+          >
+            Einstellungen
+          </Button>
+          <Button size="sm" variant="outline">
+            Abmelden
+          </Button>
+        </div>
       </header>
 
       <main className="flex flex-1 items-center justify-center p-6">
